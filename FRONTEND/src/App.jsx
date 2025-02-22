@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { React, useSate } from 'react';
+import Inscription from './pages/Inscription';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-        
+        <Inscription />
     </>
   )
 }
