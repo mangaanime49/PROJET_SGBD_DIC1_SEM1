@@ -6,9 +6,13 @@ const inscription = (req, res) => {
 
     Utilisateur.create(nom, prenom, email, mot_de_passe, role, (err, result) => {
         if (err) {
-            return res.status(500).json({ message: 'Erreur lors de la création du compte', error: err });
-        }
-        return res.status(201).json({ message: 'Compte créé avec succès', userId: result.insertId });
+            if (err.code = 'ER_DUP_ENTRY') {
+                return res.status(500).json({ message: 'Email deja utilise' });
+            } else{
+                return res.status(500).json({ message: 'Erreur lors de la création du compte', error: err });
+            }
+        } 
+        return res.status(200).json({ message: 'Compte créé avec succès', userId: result.insertId });
     });
 };
 
