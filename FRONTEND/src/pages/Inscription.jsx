@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import { TextField, Button, Grid, Typography, Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import SchoolIcon from "@mui/icons-material/School";
 import LockIcon from "@mui/icons-material/Lock";
@@ -7,7 +8,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { motion } from "framer-motion";
 import photoEtudiant from "../assets/learn.jpg";
 import photoEnseignant from "../assets/photo4.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Inscription.css"
 
 const Inscription = () => {
@@ -15,19 +16,30 @@ const Inscription = () => {
   const [prenom, setPrenom] = useState("");
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); 
-  const [confirmPassword, setConfirmPassword] = useState(""); 
+  const [mot_de_passe, setMot_de_passe] = useState(""); 
+  const [confirmMot_de_passe, setConfirmMot_de_passe] = useState(""); 
   const [error, setError] = useState("");
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!prenom || !nom || !email || !password || !confirmPassword) {
+    if (!prenom || !nom || !email || !mot_de_passe || !confirmMot_de_passe) {
       setError("Veuillez remplir tous les champs.");
-    } else if (password !== confirmPassword) {
+    } else if (mot_de_passe !== confirmMot_de_passe) {
       setError("Les mots de passe ne correspondent pas.");
     } else {
       setError(""); 
-      console.log({ prenom, nom, email, password, role }); 
+      console.log({ prenom, nom, email, mot_de_passe, role }); 
+
+      try {
+        const response = await axios.post('http://localhost:5000/api/auth/inscription', { nom, prenom, email, mot_de_passe, role });
+        alert("Compte creer avec succes");
+        navigate('/connexion');
+      } catch (error) {
+        console.log("Erreur: ",error);
+      }
+
     }
   };
 
@@ -145,7 +157,7 @@ const Inscription = () => {
                 variant="outlined"
                 type="password"
                 margin="normal"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setMot_de_passe(e.target.value)}
                 InputProps={{
                   startAdornment: <LockIcon color="primary" sx={{ mr: 1 }} />,
                 }}
@@ -158,7 +170,7 @@ const Inscription = () => {
                 variant="outlined"
                 type="password"
                 margin="normal"
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => setConfirmMot_de_passe(e.target.value)}
                 InputProps={{
                   startAdornment: <LockIcon color="primary" sx={{ mr: 1 }} />,
                 }}
